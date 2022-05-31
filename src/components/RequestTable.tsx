@@ -14,6 +14,7 @@ const RequestTable: FC = () => {
             itemLayout="horizontal"
             dataSource={requests}
             renderItem={RequestElem}
+            style={{minWidth: 400}}
         />
     );
 }

@@ -6,18 +6,18 @@ import { Request } from "store/reducers/requests";
 import { requestGeoPath, GeoResult } from "api";
 import { geoFail, geoSuccess } from "store/actions/geo";
 import { GeoTypes } from "store/reducers/geo";
+import { toast } from "react-toastify";
 
 function* fetchGeo() {
     const selected = (yield select(selectSelectedRequest)) as Request | null;
     if (!selected) return;
-    try {
-        const response = (yield call(requestGeoPath, {start: selected.depart.pos, end: selected.dest.pos})) as GeoResult;
+    const response = (yield call(requestGeoPath, {start: selected.depart.pos, end: selected.dest.pos})) as GeoResult & {error?: {message: string}};
+    if (response.error) {
+        yield put(geoFail(new Error(response.error.message)));
+        toast.error(response.error.message);
+    } else {
         const points = head(response.features)?.geometry.coordinates ?? [];
         yield put(geoSuccess(points.map(([a, b]) => [b, a])));
-    } catch (error) {
-        if (error instanceof Error)
-            yield put(geoFail(error));
-        console.error(error);
     }
 }
 

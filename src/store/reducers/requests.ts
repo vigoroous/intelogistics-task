@@ -15,11 +15,13 @@ export type Request = {
 
 export type RequestState = {
     selected: Request | null,
+    toEdit: Request | null,
     data: Array<Request>
 }
 
 const initialState: RequestState = {
     selected: null,
+    toEdit: null,
     data: [
         // { title: 'request', id: 1, dest: { title: 'A', pos: [-0.09, 51.505]}, depart: { title: 'G', pos: [-0.02933,51.47970]}  },
         { title: 'request', id: 1, dest: { title: 'A', pos: [55.852985, 38.43966] }, depart: { title: 'G', pos: [55.88559, 38.44870] } },
@@ -33,24 +35,24 @@ const initialState: RequestState = {
 
 export enum RequestsTypes {
     ADD_REQUEST = "ADD_REQUEST",
+    SELECT_FOR_EDIT = "SELECT_FOR_EDIT",
     REMOVE_REQUEST = "REMOVE_REQUEST",
-    CHANGE_DEST = "CHANGE_DEST",
-    CHANGE_DEPART = "CHANGE_DEPART",
+    CHANGE = "CHANGE",
     SELECT_REQUEST = "SELECT_REQUEST",
 }
 
 export type RequestsAddAction = { type: RequestsTypes.ADD_REQUEST, payload: Request }
 export type RequestsRemoveRequestAction = { type: RequestsTypes.REMOVE_REQUEST, payload: number }
-export type RequestsChangeDestAction = { type: RequestsTypes.CHANGE_DEST, payload: Pick<Request, 'id' | 'dest'> }
-export type RequestsChangeDepartAction = { type: RequestsTypes.CHANGE_DEPART, payload: Pick<Request, 'id' | 'depart'> }
+export type RequestsChangeAction = { type: RequestsTypes.CHANGE, payload: Request }
 export type RequestsSelectRequestAction = { type: RequestsTypes.SELECT_REQUEST, payload: Request['id'] }
+export type RequestsSelectForEditAction = { type: RequestsTypes.SELECT_FOR_EDIT, payload: Request | null }
 
 export type RequestsActions =
     | RequestsAddAction
     | RequestsRemoveRequestAction
-    | RequestsChangeDestAction
-    | RequestsChangeDepartAction
+    | RequestsChangeAction
     | RequestsSelectRequestAction
+    | RequestsSelectForEditAction
 
 export const requestReducer = (state = initialState, action: RequestsActions): RequestState => {
     switch (action.type) {
@@ -58,22 +60,15 @@ export const requestReducer = (state = initialState, action: RequestsActions): R
             return { ...state, data: union(state.data, [action.payload]) };
         case RequestsTypes.REMOVE_REQUEST:
             return { ...state, data: remove(state.data, { id: action.payload }) };
-        case RequestsTypes.CHANGE_DEST: {
+        case RequestsTypes.CHANGE: {
             const index = findIndex(state.data, { id: action.payload.id });
+
             if (index !== -1) {
                 const data = state.data.slice();
-                data[index].dest = action.payload.dest;
-                return { ...state, data };
+                data[index] = action.payload;
+                return { ...state, data, toEdit: null };
             }
-            return state;
-        }
-        case RequestsTypes.CHANGE_DEPART: {
-            const index = findIndex(state.data, { id: action.payload.id });
-            if (index !== -1) {
-                const data = state.data.slice();
-                data[index].depart = action.payload.depart;
-                return { ...state, data };
-            }
+
             return state;
         }
         case RequestsTypes.SELECT_REQUEST: {
@@ -86,6 +81,8 @@ export const requestReducer = (state = initialState, action: RequestsActions): R
 
             return state;
         }
+        case RequestsTypes.SELECT_FOR_EDIT:
+            return {...state, toEdit: action.payload };
         default:
             return state;
     }

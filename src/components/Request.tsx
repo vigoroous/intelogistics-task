@@ -5,32 +5,35 @@ import { EditOutlined } from '@ant-design/icons';
 
 import { useAppDispatch } from "store";
 
-import { selectRequest } from "store/actions/requests";
+import { selectRequest, toEditRequest } from "store/actions/requests";
 import { geoRequest } from "store/actions/geo";
 
 import { Request } from "store/reducers/requests";
 
 import { selectSelectedRequest } from "store/selectors/requests";
 
-const RequestElem: FC<Request> = ({id, depart, dest, title}) => {
+const RequestElem: FC<Request> = (props) => {
     const dispatch = useAppDispatch();
     const selected = useSelector(selectSelectedRequest);
 
-    const isSelected = id === selected?.id;
+    const isSelected = props.id === selected?.id;
 
     return (
         <List.Item
-            key={id}
-            actions={[<EditOutlined onClick={() => console.log('test')}/>]}
+            key={props.id}
+            actions={[<EditOutlined onClick={e => {
+                e.stopPropagation();
+                dispatch(toEditRequest(props));
+            }}/>]}
             className={`${isSelected ? 'bg-slate-50' : 'bg-white'}`}
             onClick={() => {
-                dispatch(selectRequest(id));
+                dispatch(selectRequest(props.id));
                 dispatch(geoRequest());
             }}
         >
             <Space direction="vertical">
-                <Typography.Title level={4}>{title}</Typography.Title>
-                <Typography.Text>{`Заявка из ${depart.title} в ${dest.title}`}</Typography.Text>
+                <Typography.Title level={4}>{props.title}</Typography.Title>
+                <Typography.Text>{`Заявка из ${props.depart.title} в ${props.dest.title}`}</Typography.Text>
             </Space>
         </List.Item>
     );

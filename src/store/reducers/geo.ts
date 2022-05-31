@@ -3,7 +3,7 @@ import { LatLngTuple } from 'leaflet';
 export type RequestState = {
     loading: boolean;
     data: LatLngTuple[];
-    error: Error | null;
+    error: any | null;
 }
 
 const initialState: RequestState = {
