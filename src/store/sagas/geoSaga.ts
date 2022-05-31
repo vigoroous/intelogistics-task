@@ -9,10 +9,7 @@ import { GeoTypes } from "store/reducers/geo";
 
 function* fetchGeo() {
     const selected = (yield select(selectSelectedRequest)) as Request | null;
-    if (!selected) {
-        yield put(geoFail(new Error("no request selected")));
-        return;
-    }
+    if (!selected) return;
     try {
         const response = (yield call(requestGeoPath, {start: selected.depart.pos, end: selected.dest.pos})) as GeoResult;
         const points = head(response.features)?.geometry.coordinates ?? [];

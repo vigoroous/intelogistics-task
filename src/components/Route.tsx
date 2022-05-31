@@ -11,12 +11,14 @@ import { selectSelectedRequest } from "store/selectors/requests";
 
 const Route: FC = () => {
     const selected = useSelector(selectSelectedRequest);
-    const {data, error, loading} = useSelector(selectGeo);
-
+    const {data, loading} = useSelector(selectGeo);
+    
     if (!selected) return null;
-    if (error) return null;
     return (
         <>
+            {loading ?
+                <Spin/>:
+                <Polyline positions={data}/>}
             <Marker position={selected.depart.pos}>
                 <Popup>
                     Отправка из {selected.depart.title}
@@ -27,9 +29,6 @@ const Route: FC = () => {
                     Прибытие в {selected.dest.title}
                 </Popup>
             </Marker>
-            {loading ?
-                <Spin/>:
-                <Polyline positions={data}/>}
         </>
     );
 }
