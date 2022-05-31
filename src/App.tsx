@@ -1,25 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Row, Col, Layout } from "antd";
+import { Provider } from 'react-redux';
+
 import './App.css';
+import 'leaflet/dist/leaflet.css';
+
+import RequestTable from 'components/RequestTable';
+import MapComponent from 'components/MapComponent';
+
+import configureStore, { sagaMiddleware } from 'store';
+import rootSage from "store/sagas";
+
+const store = configureStore();
+sagaMiddleware.run(rootSage);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Row gutter={10} className="App">
+        <Col span={12}>
+          <RequestTable />
+        </Col>
+        <Col span={12}>
+          <MapComponent />
+        </Col>
+      </Row>
+    </Provider>
   );
 }
 
