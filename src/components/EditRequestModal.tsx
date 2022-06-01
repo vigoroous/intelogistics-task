@@ -1,18 +1,17 @@
-import { Col, Form, Input, Modal, Row } from "antd";
+import { Form, Modal, Select } from "antd";
+import { find } from "lodash";
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
 import { changeRequest, toEditRequest } from "store/actions/requests";
 
 import { selectToEditRequest } from "store/selectors/requests";
+import { fakeOptions } from "utils";
 
 type FormType = {
   fromTitle: string;
-  fromA: number;
-  fromB: number;
   toTitle: string;
-  toA: number;
-  toB: number;
+  
 };
 
 const EditRequestModal: FC = () => {
@@ -34,19 +33,16 @@ const EditRequestModal: FC = () => {
         form
           .validateFields()
           .then((values) => {
-            dispatch(
-              changeRequest({
-                ...toEdit,
-                depart: {
-                  title: values.fromTitle,
-                  pos: [values.fromA, values.fromB],
-                },
-                dest: {
-                  title: values.toTitle,
-                  pos: [values.toA, values.toB],
-                },
-              })
-            );
+            const depart = find(fakeOptions, {title: values.fromTitle});
+            const dest = find(fakeOptions, {title: values.toTitle});
+            if (depart && dest)
+              dispatch(
+                changeRequest({
+                  ...toEdit,
+                  depart,
+                  dest  
+                })
+              );
           })
           .catch((info) => {
             console.log("Validate Failed:", info);
@@ -61,52 +57,28 @@ const EditRequestModal: FC = () => {
         wrapperCol={{ span: 16 }}
         initialValues={{
           fromTitle: toEdit?.depart.title,
-          fromA: toEdit?.depart.pos[0],
-          fromB: toEdit?.depart.pos[1],
           toTitle: toEdit?.dest.title,
-          toA: toEdit?.dest.pos[0],
-          toB: toEdit?.dest.pos[1],
         }}
         autoComplete="off"
       >
-        <Form.Item
-          name="fromTitle"
-          label="Название из"
-          rules={[{ required: true }]}
-        >
-          <Input />
+        <Form.Item name="fromTitle" label="Отправка из">
+          <Select>
+            {fakeOptions.map(item => (
+              <Select.Option key={item.title} value={item.title}>
+                {item.title} | [{item.pos.join(',')}]
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-        <Row gutter={10}>
-          <Col span={12}>
-            <Form.Item name="fromA" rules={[{ required: true }]}>
-              <Input type="number" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name="fromB" rules={[{ required: true }]}>
-              <Input type="number" />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item
-          name="toTitle"
-          label="Название в"
-          rules={[{ required: true }]}
-        >
-          <Input />
+        <Form.Item name="toTitle" label="В">
+          <Select>
+            {fakeOptions.map(item => (
+              <Select.Option key={item.title} value={item.title}>
+                {item.title} | [{item.pos.join(',')}]
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-        <Row gutter={10}>
-          <Col span={12}>
-            <Form.Item name="toA" rules={[{ required: true }]}>
-              <Input type="number" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name="toB" rules={[{ required: true }]}>
-              <Input type="number" />
-            </Form.Item>
-          </Col>
-        </Row>
       </Form>
     </Modal>
   );

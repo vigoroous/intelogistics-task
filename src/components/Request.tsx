@@ -25,7 +25,10 @@ const RequestElem: FC<Request> = (props) => {
                 e.stopPropagation();
                 dispatch(toEditRequest(props));
             }}/>]}
-            className={`${isSelected ? 'bg-slate-50' : 'bg-white'}`}
+            style={{
+                backgroundColor: isSelected ? 'rgba(248, 250, 252, 0.5)' : '#fff',
+                padding: '8px 12px',
+            }}
             onClick={() => {
                 dispatch(selectRequest(props.id));
                 dispatch(geoRequest());

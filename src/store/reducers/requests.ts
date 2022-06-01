@@ -23,13 +23,9 @@ const initialState: RequestState = {
     selected: null,
     toEdit: null,
     data: [
-        // { title: 'request', id: 1, dest: { title: 'A', pos: [-0.09, 51.505]}, depart: { title: 'G', pos: [-0.02933,51.47970]}  },
-        { title: 'request', id: 1, dest: { title: 'A', pos: [55.852985, 38.43966] }, depart: { title: 'G', pos: [55.88559, 38.44870] } },
-        { title: 'request', id: 2, dest: { title: 'B', pos: [51.505, -0.09] }, depart: { title: 'H', pos: [51.47970, -0.02933] } },
-        { title: 'request', id: 3, dest: { title: 'C', pos: [51.505, -0.09] }, depart: { title: 'I', pos: [51.47970, -0.02933] } },
-        { title: 'request', id: 4, dest: { title: 'D', pos: [51.505, -0.09] }, depart: { title: 'J', pos: [51.47970, -0.02933] } },
-        { title: 'request', id: 5, dest: { title: 'E', pos: [51.505, -0.09] }, depart: { title: 'K', pos: [51.47970, -0.02933] } },
-        { title: 'request', id: 6, dest: { title: 'F', pos: [51.505, -0.09] }, depart: { title: 'L', pos: [51.47970, -0.02933] } },
+        { title: 'request-1', id: 1, dest: { title: 'A', pos: [55.852985, 38.43966] }, depart: { title: 'D', pos: [55.8467,38.5012] } },
+        { title: 'request-2', id: 2, dest: { title: 'B', pos: [51.505, -0.09] }, depart: { title: 'E', pos: [51.5206,-0.0746] } },
+        { title: 'request-3', id: 3, dest: { title: 'C', pos: [51.505, -0.09] }, depart: { title: 'F', pos: [51.5320,-0.1061] } },
     ],
 }
 
